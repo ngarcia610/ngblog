@@ -4,15 +4,6 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+![Reading, PA](/pic/Reading.JPEG)
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
-
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
-
-
-[jekyll-organization]: https://github.com/jekyll
+I started in IT around 2012 in Reading, Pennsylvania. I've worked for companies of various sizes and enjoy learning about all sectors of IT. In my free time, I read nonfiction, study films, and expand my skill-set. Most of my experience is in on the infrastructure and ops side of things. I'm a self taught Pythonista and enjoy teaching myself various subjects. For consulting or inquiries, please e-mail admin@nathangarcia.net.
