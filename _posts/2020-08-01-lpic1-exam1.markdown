@@ -1,13 +1,16 @@
 ---
 layout: post
-title:  "LPIC-1 Notes"
+title:  "LPIC-1 Exam 1"
 date:   2020-08-01 12:20:00 -0400
 categories: IT reference
 ---
+Exam 1  
 1. System Architecture
 2. Linux installation and package management
 3. GNU and UNIX commands
 4. Devices, filesystems and filesystem hierarchy
+
+Exam 2  
 5. Shells, scripting and data management
 6. User interfaces and desktop
 7. Manage user and group accounts and related system files
@@ -164,24 +167,145 @@ Cloud-init - a set of scripts that execute when an instance (cloud vm) is starte
 Applies user data to your instances automatically.  
 
 # GNU and UNIX commands
+**Working on the command line**  
+The shell is the text based interface that allows you to enter commands.  
+The default is usually bash, but other common ones are zsh and csh.  
+Environment variables can be viewed with `env`  
+`SHELL=/bin/bash` tells you what shell is being used.  
+`PATH=/home`... tells you where the system searches when executing commands.  
+Command history is stored in `.bash_history` and the variable `$HISTFILE`  
+Directories preceded by a '.' are hidden.  
+To view all files including hidden files, use `ls -a`  
+Environment variables are temporary and get reset when the shell is started unless you manually add them to the file `.bashrc`  
+Set and unset can change the shell attributes and positional parameters.  
+You can use `help set` for more info (no man page)  
+There are 9 categories of man pages:  
+  1. Executable programs or shell commands.  
+  2. System calls  
+  3. Library calls  
+  4. Special files (/dev)  
+  5. File formats and conventions  
+  6. Games  
+  7. Misc  # Shells, scripting and data management  
+  8. Sysadmin commands (root)  
+  9. Kernal routines  
 
+Print system information with `uname -a`  
+
+**Quoting, type and which**  
+Quoting - hide characters from the shell. You can use \ for one character or ' ' for a line.  
+To get information about commands, use `type` (if they are built-in or if there are binaries somewhere)  
+To find where a command is in the path, use `which`  
+
+**Process text streams using filters**  
+How to manipulate text in a file or output from a command.  
+Print the contents of a text file with `cat`.  
+To remove sections from within a file use `cut` (uses char, fields, or bytes).  
+To show a list of all usernames in the system, use `cut -d: -f1 /etc/passwd`  
+`expand` is used to convert tabs in a file to 8 spaces; `unexpand` does the reverse.  
+You can view tabs in a file with `cat -vet <filename>` (shown by '^I')  
+To find the line | word | byte count use `wc`  
+You can format a text file to wrap with `fmt`  
+You can view the first 10 or last 10 lines of a file with `head` and `tail`  
+To join two files, line by line that share a common field, use `join`  
+To show a page by page version of a file, use `less`  
+`nl` adds line numbers to a file.  
+`od` dump files in octal format to your screen.  
+`paste` is same as join, but does any line  
+`pr` command cleans up a page for printing (adds date, name, page number)  
+`sed` can perform complex operations on text  
+`sed -e s/one/two`  will replace text with the one, with the word two  
+`sort` can sort a file alphabetically (first character of each line)  
+`split` splits a file into multiple pieces  
+`tr -d` deletes characters  
+`uniq` shows matching adjacent lines in a file  
+
+**Cat and sums**  
+`bzcat <filename.bz2>` will show the contents of compressed bunzip2 files  
+`zcat <filename.gz>` will show the contents of compressed gzip files  
+`xzcat <filename.xz>` will show the contents of compressed xz files  
+`md5sum <filename>` used to verify a hash  
+`sha256sum <filename>` and `sha512sum <filename>` do the same.  
+
+**Basic file management**  
+`cp file1 file2` copies files  
+`~/` is a shortcut for the home directory  
+`mkdir` makes a directory  
+`mv file1 file2` moves a file  
+`touch` creates a new file or updates the modified time to an existing file  
+`rm` removes a file, -r deletes directories and contents (rmdir does the same)  
+`file` reads a file's metadata  
+`find . -name "file*"` searches the current directory for all files that begin with the word file  
+With find, you can use -size or -mmin (minutes) to filter results.  
+To create and extract archives use `tar cvf {newfile.tar} {file1} {file2} ...` and `tar xvf newfile.tar`  
+Archives group files, but do not compress.  
+`dd if=<input> of=<output> [options]` low level copy command to create backups  
+
+**Use streams, pipes, and redirects**  
+3 streams the shell uses: stdin-0, stdout-1 (>), stderr-2 (2>)  
+You append with '>>', a single > will overwrite the file  
+You redirect input with <  
+If you use `sort << END`, it will take continuous input until the string END is entered  
+Pipes | allow you to use the output of one command as the input to another command.  
+`xargs` takes the output of one command (line by line) and uses it on the command that follows  
+Example: `ls -1 | xargs wc` this takes every file from the ls command and finds the line count on each.  
+You can redirect output to a file, while also watching the output as it appears using `tee`  
+
+**Create, monitor, and kill processes**  
+Kill a command with ctrl+c, or suspend with ctrl+c  
+Once it's stopped you can let it run in the background with `bg`  
+To bring it back to the front, you can use `fg`  
+To run a script in the current shell (by default it spawns its own shell) use `source <script.sh>`  
+If you use a `&` at the end of a command it will move it to the background  
+You can use `nohup` to suppress messages  
+Use `jobs` to show what processes are running  
+You can view all processes with `ps aux` (this will show all processes group by user)  
+kill <pid> will terminate a program or send signals if specified  
+
+Signal Types:  
+SIGINT interrupt signal (ctrl+c)  
+SIGKILL kill signal (last resort)  
+SIGSTOP pause signal (ctrl+z)  
+SIGTERM termination signal (gentle)  
+
+`killall <process name>` kills multiple processes with the same name  
+`pkill` kills a process by name instead of PID  
+`top` continually updating screen with processes and system info  
+`uptime` shows uptime, logged in users, and load  
+`free` RAM and swap usage  
+`screen` allows you to have multiple terminals with active jobs  
+`ctrl+a then d` detaches from the screen  
+`screen -r` reattaches to the screen  
+`a then c` will give a new window inside that screen  
+`ctrl+a` and a will toggle the windows  
+
+**Watch and tmux**  
+
+**Modify process execution priorities**  
+
+**Search text files using regular expressions**  
+
+**Basic vs extended regular expressions**  
+
+**Perform basic file editing operations using vi**  
+
+**Other common editors**  
 
 # Devices, filesystems and filesystem hierarchy
+**Create partitions and filesystems**  
 
+**Maintain the integrity of filesystems**  
 
-# Shells, scripting and data management
+**xfs tools**  
 
+**Control mounting and unmounting of filesystems**  
 
-# User interfaces and desktop
+**Extra filesystem commands**  
 
+**Manage disk quotas**  
 
-# Manage user and group accounts and related system files
+**Manage file permissions and ownership**  
 
+**Create and change hard and symbolic links**  
 
-# Essential system services
-
-
-# Networking fundamentals
-
-
-# Security
+**Find system files and place files in the correct location**  
