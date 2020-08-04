@@ -1,9 +1,10 @@
 ---
 layout: post
-title:  "The Science and Practice of Persuasion"
+title:  "Persuasion"
 date:   2020-08-03 12:00:00 -0400
 categories: book notes
 ---
+# The Science and Practice of Persuasion by Robert Cialdini  
 
 # Summary  
 Cialdini uses research to explain that six principles determine how people are influenced by each other.  
