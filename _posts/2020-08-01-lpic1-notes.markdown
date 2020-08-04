@@ -1,0 +1,187 @@
+---
+layout: post
+title:  "LPIC-1 Notes"
+date:   2020-08-01 12:20:00 -0400
+categories: IT reference
+---
+1. System Architecture
+2. Linux installation and package management
+3. GNU and UNIX commands
+4. Devices, filesystems and filesystem hierarchy
+5. Shells, scripting and data management
+6. User interfaces and desktop
+7. Manage user and group accounts and related system files
+8. Essential system services
+9. Networking fundamentals
+10. Security
+
+# System Architecture
+**Boot the system**  
+Legacy BIOS booting:  
+   BIOS > MBR > Boot Loader > Kernel > OS  
+UEFI booting:  
+   UEFI > EFI Boot Loader > Kernel > OS  
+At the GRUB menu, you can edit the config temporarily by pressing 'e'.  
+   Linux line: specifies the kernel (central module of an OS)  
+   Initrd line: specifies the ramdisk (temporary root fs loaded into mem during boot).  
+Within the OS you can view this with `cat /proc/cmdline`  
+Init is the first process run by a Linux system.  
+You can view this by using `ps aux | head` and viewing PID 1.  
+It is located at `/sbin/init`  
+View kernel messages that are logged during system boot with `dmesg -T`  
+To suppress boot messages use the 'quiet' kernel parameter.  
+This can be added in the GRUB config file on line `GRUB_CMDLINE_LINUX_DEFAULT="quiet"`  
+
+**Configuring Hardware**  
+Udev is the device manager and handles events (such as loading firmware).  
+This is done by tmpfs that is mounted to `/dev` on startup.  
+Udev configuration is found at `/etc/udev/rules.d`  
+Dbus is a framework that allows processes to talk to each other securely and reliably.  
+Sysfs - virtual filesystem provided by the kernel.  
+Shows information about kernel subsystems (hw devices, drivers, etc)  
+Located at `/sys`  
+Procfs - similar to sysfs but also shows processes and system info  
+Located at `/proc`  
+You can use /proc to change kernel parameters  
+To view all the modules in use, use `lsmod`  
+To enable a mod use `modprobe` to remove a mod use `rmmod`  
+To view all PCI devices connected to the system, use `lspci`  
+You can get more information by adding `-v`, `-vv`, or `-vvv`  
+
+**Runlevels and boot targets**  
+Number between 0 and 6 that determines the script that is executed at initialization  
+Can be automatic or manual  
+Varies by distribution  
+```
+0 - Halt (shutdown)  
+1 - Single user mode  
+2 - Multi-user, no network  
+3 - Multi-user and network  
+4 - Unused (customizable)  
+5 - Runlevel3 + GUI  
+6 - Reboot  
+```
+Script location is based on whether the system is running sysvinit or systemd  
+
+Sysvinit  
+inittab located at `/etc/inittab`  
+
+Systemd  
+System scripts located at `/etc/systemd/system`  
+Package scripts located at `/usr/lib/systemd/system`  
+System > Package as far as priority  
+Uses 'targets' instead of runlevels:  
+```
+runlevel0.target, poweroff.target  
+runlevel1.target, rescue.target  
+runlevel2.target, runlevel4.target, multi-user.target  
+runlevel5.target, graphical.target  
+runlevel6.target, reboot.target  
+emergency.target  
+```
+Emergency.target is similar to recovery mode on Windows. Lets you sign in as root to a terminal with only essential services loaded.  
+Use `init` or `telinit` to change runlevels  
+You can also use `sudo systemctl isolate reboot.target` to temporarily change runlevel  
+To permanently change runlevel use `sudo systemctl enable multi-user.target`  
+
+# Linux installation and package management
+**Design hard disk layout**  
+Filesystem Hierarchy Standard (FHS)  
+Defines the directory structure in Linux.  
+The root is designated with '/'  
+`/boot` - files for booting the OS  
+`/bin` - critical executable files (ls, cp, mount, etc)  
+`/dev `- device files  
+`/sbin` - similar to bin (programs run by sysadmin)  
+`/etc` - configuration files  
+`/home` - user's home directory  
+`/lib `- program libraries  
+`/media` - mount point for removable media  
+`/usr` - utilities and applications  
+`/var` - logs  
+`/tmp` - temporary files  
+
+**Install a boot loader**  
+Boot loaders boot the system and run before the OS.  
+They can be configured while using the OS.  
+Boot loaders: LILO, GRUB Legacy, GRUB2  
+To determine what version you're using, use `grub-probe --version`  
+The config file is in `/boot/grub.cfg`  (in legacy systems it is menu.lst or grub.conf)  
+Add default options that apply to all entries in grub at `/etc/default/grub`  
+After you make changes you must use `update-grub` to generate the new files.  
+To install grub to the MBR, use `sudo grub-install /dev/sda`  
+
+**Manage shared libraries**  
+Libraries are just shared, re-usable code to perform common tasks like writing a file to disk or sending files over the network.  
+In order to use libraries, you must link them. Two types (static and dynamic)  
+   Static - each application gets a copy of the library  
+   Dynamic - each application points to the libraries they share  
+Location of config file: `/etc/ld.so.conf`  
+To update the linker bindings use `ldconfig`  
+If you want to set one temporarily, you can use an environment variable `LD_LIBRARY_PATH`.  
+Use export `<variable_name>=/home/user/lib/` (this gets cleared on logout)  
+To view which libraries an object is linked to, use `ldd`  
+For example, use `which ls` to find where an application is located, then `ldd /bin/ls` to show the dynamic link libraries.  
+
+**Use Debian package management**  
+dpkg is the debian package manager (low-level); it installs, upgrades, and removes software.  
+apt is the high level package manager; does everything dpkg does but also can upgrade the system and resolve dependencies.  
+Use `dpkg -l` to list all packages  
+To update packages use, `sudo apt-get update`  
+Configuration file for repositories located at `/etc/apt/sources.list`  
+You can check dependencies for an app with `apt-cache depends apache2`  
+
+**Use RPM and YUM package management**  
+RPM = DPKG, YUM = APT  
+Package management for Red Hat and Centos systems  
+Located at `/etc/yum.conf`  
+Sources directory located at `/etc/yum.repos.d`  
+You can query RPM to find out what package a file belongs to:  
+`rpm -qf /file/path`  
+If that file gets removed, you can use `sudo rpm --verify <name of package>`  
+This will return what files are missing.  
+You can run this against the entire system with `sudo rpm -Va` (takes a long time)  
+
+**Zypper and dnf**  
+Zypper is specific to openSUSE  
+List defined repos with `zypper repos` or `zypper lr`  
+Install packages with `zypper in` and remove with `zypper remove --clean-deps <package>`  
+DNF is the newest version of the YUM package manager for Redhat and Centos systems  
+To find info on a package `dnf info <package>`  
+To see installed apps `dnf list installed`  
+
+**Linux as a virtualization guest**  
+VM advantages:  
+   Multiple OS on same computer  
+   Can be cloned, backed up, easily restored  
+   Easy to maintain and manage  
+   Protects the host  
+VM disadvantages:  
+   Less efficient since hardware is accessed indirectly  
+   Performance can be hindered by host  
+Containers allow applications, libraries, dependencies, and files to be bundled together.  
+Cloud-init - a set of scripts that execute when an instance (cloud vm) is started.  
+Applies user data to your instances automatically.  
+
+# GNU and UNIX commands
+
+
+# Devices, filesystems and filesystem hierarchy
+
+
+# Shells, scripting and data management
+
+
+# User interfaces and desktop
+
+
+# Manage user and group accounts and related system files
+
+
+# Essential system services
+
+
+# Networking fundamentals
+
+
+# Security
