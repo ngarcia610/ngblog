@@ -280,16 +280,68 @@ SIGTERM termination signal (gentle)
 `ctrl+a` and a will toggle the windows  
 
 **Watch and tmux**  
+`watch` run commands periodically and show the output on the same screen.  
+`tmux` (terminal multiplexer) in one terminal open multiple windows but in the same screen  
+ctrl+b switches to command mode, then you can use a variety of options  
+ctrl+b then % will create a new window  
+ctrl+b and arrow left or right will switch windows  
+ctrl+d will close the window  
+ctrl+b then c will create separate windows  
+ctrl+b then n (next) or p (previous) to switch between full windows  
+`tmux ls` can show all running sessions  
 
 **Modify process execution priorities**  
+Processes are given a "nice" time, which determines how much CPU time a process gets  
+-20 is the highest, 19 is the lowest, 0 is the default  
+`renice` can modify the nice value; by default the command puts 10 (lower than the default 0)  
+Example: `sudo renice -5 -p <PID>`  
 
 **Search text files using regular expressions**  
+Symbols used in regex:  
+| means or  
+() means grouping  
+$ means end of line  
+^ means start of a line  
+. means single character  
+? match one or more of the preceding element  
+\* match 0 or more occurrences  
+\+ match 1 or more preceding element  
+{n} the preceding element matches exactly n times  
+{min,} or {min, max} further filter how many times an item must match  
+
+GREP (globally search for a regular expression and print)  
+Uses regex to search plain text  
+3 types: grep, egrep, fgrep  
+egrep allows you to use regex symbols without having to escape them (same as grep -E)  
+fgrep search for a string without regex symbols  
 
 **Basic vs extended regular expressions**  
+In basic: ? + {} () don't have meaning and will be searched as is  
+In extended: ? + {} () does have meaning and you have to escape the characters with \ in order to search as is.  
 
 **Perform basic file editing operations using vi**  
+Vi has two main modes: editing and command  
+Editing mode is used for adding and removing text  
+Command mode is for manipulating the file  
+hjkl are used to move around  
+You can search in command mode with / and press n to find the next result.  
+dd deletes a line the cursor is on
+p will paste a line after the current line a cursor is on  
+P will paste a line before the current line a cursor is on  
+yy to "yank" or copy a line  
+Adding a number before a command will repeat the command  
+For example: 3dd will delete 3 lines after the cursor.  
+You can also do this with the movement keys.  
+x will delete a character  
+$ moves to the end of a line, ^ moves to the beginning of a line  
+wq will write your changes and quit  
+q! will quit without saving your changes  
 
 **Other common editors**  
+`emacs`  complex editor that competes with VIM; not installed by default.  
+`nano`  lightweight and installed by default. Simple and easy to use  
+`sudo update-alternatives` --config editor is used to set the system default editor  
+To check your current editor you can echo $EDITOR  
 
 # Devices, filesystems and filesystem hierarchy
 **Create partitions and filesystems**  
