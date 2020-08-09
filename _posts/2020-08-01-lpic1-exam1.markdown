@@ -479,13 +479,19 @@ Add -R to change the permissions recursively
 You list what you want to suppress from your default files and folders  
 
 **Create and change hard and symbolic links**  
-
+Files are represented by an inode  
+Files are only deleted when all links to an inode are removed.  
+A hard link is a link to another file's inode, and it can only occur on the same fs.  
+A soft link is a link to another file name, and can occur across different fs.  
+When you do ls -la the number after the permissions is the number of hard links associated with a file.  
+By default, files are 1, and directories are 2 ('.' is a link to itself and '..' is a link to the parent)  
+ln is used to make hard links; Example: `ln link1 link2`  
+Use ln -s for soft links; Example: `ln -s /usr/bin /somewhere`  
+When you run ls on a link, it shows you the destination's contents.  
 
 **Find system files and place files in the correct location**  
-.
-.
-.
-.
-.
-.
-.
+`find`, `which`, and `type` can do this  
+`whereis` can show the location of the binary as well as the location of the man page  
+`locate` builds a db of your filesystem which can be queried directly instead of searching the fs.  
+`updatedb` updates the db used by locate  
+`/etc/updatedb.conf` config file that tells locate where not to search  
