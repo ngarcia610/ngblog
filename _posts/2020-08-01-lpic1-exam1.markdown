@@ -345,19 +345,147 @@ To check your current editor you can echo $EDITOR
 
 # Devices, filesystems and filesystem hierarchy
 **Create partitions and filesystems**  
+`df` show file system disk space usage.  
+`lsblk` can show partitions  
+`sudo fdisk` tool for managing partitions  
+Common commands for fdisk:  
+p print disk info  
+m show a list of commands available  
+n for new partition  
+p for primary, e for extended  
+w write the changes to disk  
+Another tool for partitioning is `parted`  
+`mkpart > ext4 > <specify start and end>`  
+
+MBR  
+4 primary partitions, 2TB max size  
+
+GPT  
+UEFI, unlimited partitions  
+Size and limits depend on OS  
+
+Filesystems  
+ext2 for small devices  
+ext3 journaling
+ext4 huge filesystems and files allowed newest  
+reiserfs - legacy from 2001  
+btrfs - snapshots checksums and pooling, auto defrag on mnt  
+Use mkfs to make a filesystem  
+Then mount the newly created filesystem to a partition:  
+`sudo mount /dev/sdb1 /mnt/Photos`  
 
 **Maintain the integrity of filesystems**  
+`inode` object that describes a file or directory (attributes like last modified, owner, perms)  
+You can run out of inodes and won't be able to create files despite free disk space.  
+`ls -i <file or directory>` to view the inode  
+`find . -inum <inode number> | xargs rm` This will let you delete a file that has special characters (like ^M)  
+`df -i` shows inodes and usage  
+
+`du -h` shows file usage in the current directory  
+`fsck` checks and repairs issues with the filesystem  
+You can't check a device that is mounted. Use umount first, then you can check.  
+If you need to check root, reboot to rescue mode then run it.  
+
+`sudo dumpe2fs /dev/device` gives information about the super block on a hard disk  
+`sudo tune2fs -l /dev/device` This will list everything that can be set with tune2fs  
 
 **xfs tools**  
+`xfs_repair` attempts to repair corrupt XFS filesystems  
+`xfs_fsr` defrag tool  
+`xfs_db` examine or debug xfs filesystem (advanced command)  
+`xfs_db /dev/xvdf1` then `sb`, then `p` to print  
 
 **Control mounting and unmounting of filesystems**  
+`mount` and `umount` can mount, unmount, and view filesystems  
+You can also use `cat /proc/self/mounts`  
+Filesystems are automatically mounted using a file `/etc/fstab`  
+Example: You want to mount a separate partition for photos on boot  
+`/dev/sdb1 /mnt/Photos ext2 defaults 0 0`  
+You can then use `mount -a` This will mount everything in fstab that does NOT have `noauto` as the option.  
+`fuser /path` shows which user is controlling a process.  
+Then use `ps aux lgrep <number from fuser>` to show the owner  
+`ps auxf` to show a tree version  
 
 **Extra filesystem commands**  
+`blkid` shows all filesystems with their uuid attached  
+This is used in /etc/fstab  
+Systemd has mount units located at `/lib/systemd/system` use `ls *.mount`  
 
 **Manage disk quotas**  
+Disk quotas limit the storage you can use.  
+In fstab, add a new argument `usrquota` to enable user quotas on the disk  
+Example `defaults,usrquota` then reboot  
+`sudo apt-get install quota` then cd to the mount point and use `quotacheck -avugc` to initialize the disk  
+`sudo edquota -u <username>` to edit the quota for a user  
+`sudo quotaon /path` to enable quotas  
+`dd if=/dev/zero of=test.file bs=1 count=5120` creates a test file that is 5120 bytes  
+If you exceed the quota, you're given a 7 day grace period to remediate it.  
+`sudo repquota /path` produces a report that shows quotas  
 
 **Manage file permissions and ownership**  
+When you use `ls -l`, you will see a line like this `-rwxrw-r--`  
+The first character tells the file type: either - for file or d for directory  
+The next 9 characters are grouped into 3 groups of 3 which represents (in order) user, group, other  
+This can be represented by UGO  
+Each letter stands for a permission: rwx = read, write, execute  
+Example: You want to change permissions for a user on a file  
+`chmod u+rwx <filename>` gives read/write/execute for a user on a specified file  
+You can specify multiple with a comma: `chmod u+rwx,g+rw,o+r <filename>`  
+
+You can also specify permissions with numbers: r=4, w=2, x=1.  
+So instead of typing `chmod u+rwx,g+rw,o+r <filename>` you can use `chmod 764 <filename>`  
+```
+rwx =7  
+rw- =6  
+r-x =5  
+-r- =4  
+-wx =3  
+-w- =2  
+--x =1  
+--- =0  
+```  
+
+SETUID and SETGID  
+Allows you to run the program as the owner, with owners permission  
+`chmod u+s <filename>` or `chmod g+s <filename>`  
+Uppercase S means execute is not set  
+Lowercase s means execute is set  
+
+Sticky bit  
+Prevents folder deletion even if a user has write permissions, only the owner can delete  
+`chmod +t <filename>`  
+Uppercase T means exec is not set  
+Lowercase t means exec is set  
+
+You can use numbers to set both of these permissions as well  
+chmod 0764 <filename> the first 0 is implied if you only use 3 digits  
+
+```
+0 --- --- ---  
+1 --- --- --t  
+2 --- --s ---  
+3 --- --s --t  
+4 --s --- ---  
+5 --s --- --t  
+6 --s --s ---  
+7 --s --s --t  
+```  
+
+You can change the owner with `chown` and group with `chgrp`  
+You can do both with chown if you specify username:group  
+Add -R to change the permissions recursively  
+
+`umask` or `umask -S` shows the default permissions when a new file is created.  
+You list what you want to suppress from your default files and folders  
 
 **Create and change hard and symbolic links**  
 
+
 **Find system files and place files in the correct location**  
+.
+.
+.
+.
+.
+.
+.
