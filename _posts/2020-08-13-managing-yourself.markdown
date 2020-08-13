@@ -6,7 +6,7 @@ categories: book notes
 ---
 ## Summary of the articles from "On Managing Yourself" by Harvard Business Review Press
 
-# How will you measure your life? by Christensen
+# How Will You Measure Your Life? by Christensen
 Find the answers to these questions:
 1. How can I be happy in my career?  
   Find a career that allows you the opportunity to learn, grow in responsibilities, contribute, and be recognized.
@@ -98,7 +98,7 @@ Total Leadership means planning activities that simultaneously boost all 4 domai
 4. Narrow your list of activities to the 3 most important ones.  
 5. Do those things and measure your progress (document your results).  
 
-# Reclaim your job by Ghoshal and Bruch
+# Reclaim Your Job by Ghoshal and Bruch
 Don't let blockers at work define your career.
 You can reclaim your job and support company priorities using 3 strategies:
 1. Prioritize demands - slow down and focus your time and attention
