@@ -427,6 +427,7 @@ When you use `ls -l`, you will see a line like this `-rwxrw-r--`
 The first character tells the file type: either - for file or d for directory  
 The next 9 characters are grouped into 3 groups of 3 which represents (in order) user, group, other  
 This can be represented by UGO  
+To apply a permission change to all, use 'a'  
 Each letter stands for a permission: rwx = read, write, execute  
 Example: You want to change permissions for a user on a file  
 `chmod u+rwx <filename>` gives read/write/execute for a user on a specified file  
@@ -491,6 +492,7 @@ When you run ls on a link, it shows you the destination's contents.
 
 **Find system files and place files in the correct location**  
 `find`, `which`, and `type` can do this  
+`find -inum` will search for inode  
 `whereis` can show the location of the binary as well as the location of the man page  
 `locate` builds a db of your filesystem which can be queried directly instead of searching the fs.  
 `updatedb` updates the db used by locate  
