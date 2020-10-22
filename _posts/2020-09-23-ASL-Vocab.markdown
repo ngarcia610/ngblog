@@ -95,9 +95,32 @@ Signs covered:
 21. wife
 22. divorce
 
-**Day 6**  
+**Day 6 - Indexing**  
+1. I
+2. You
+3. He/She/It/This
+4. We/Us
+5. You-all
+6. My/Mine
+7. His/Hers/Its/Their
+8. Your/Yours
+9. Ours
+10. That
 
-**Day 7**  
+**Day 7 - Colors**  
+1. Red
+2. Orange
+3. Yellow
+4. Green
+5. Blue
+6. Purple
+7. Pink
+8. Gold (California)
+9. Silver
+10. Brown (beer)
+11. Black
+12. Tan
+13. White
 
 **Day 8**  
 
